@@ -115,8 +115,8 @@
         filterForm: {
           task_id: '',
           result_type: '100',
-          start_time: moment().subtract(7, 'days').format(dateFormat),
-          end_time: moment().subtract(0, 'days').format(dateFormat)
+          start_time: moment().subtract(7, 'days').hour(0).minute(0).second(0).format(dateFormat),
+          end_time: moment().subtract(0, 'days').hour(23).minute(59).second(59).format(dateFormat)
         },
         columns: [{key: 'id', title: 'ID', isAdd: false}, {key: 'user_id', title: '用户ID'},
           {key: 'send_message', width: '200px', title: '信息内容', formatter: (row, column) => { return decodeURIComponent(row[column['property']]) }},
