@@ -194,7 +194,8 @@
       },
       AddRole (formName) {
         let params = {
-          permissions: JSON.stringify(this.roleForm.permissions),
+          // permissions: JSON.stringify(this.roleForm.permissions),
+          permissions: this.roleForm.permissions,
           name: this.roleForm.name,
           title: this.roleForm.title,
           desc: this.roleForm.desc,
@@ -213,6 +214,7 @@
       EditRole (formName) {
         let params = {}
         Object.assign(params, this.roleForm)
+        // params['permissions'] = JSON.stringify(params['permissions'])
 
         this.requestPost(Services.roleModify, params, (remoteData) => {
           this.dialogModifyVisible = false
@@ -233,7 +235,7 @@
           this.dialogModifyVisible = true
           this.$nextTick(() => {
             Object.assign(this.roleForm, rowData)
-            this.roleForm.permissions = remoteData.data.permissionChecks || []
+            this.roleForm.permissions = typeof remoteData.data.permissionChecks == 'string' ? JSON.parse(remoteData.data.permissionChecks) : (remoteData.data.permissionChecks || [])
             this.roleForm.group = remoteData.data.choose_role.groups + ''
           })
         })
