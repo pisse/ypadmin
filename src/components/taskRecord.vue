@@ -1,7 +1,11 @@
 <template>
   <div class="main">
     <div class="filter-box">
-      <v-input :formData="filterForm" :opt="user_id"></v-input>
+      <v-input :formData="filterForm" :opt="user_id"></v-input>&nbsp;&nbsp;&nbsp;
+      <v-input :formData="filterForm" :opt="task_id"></v-input>
+      <br>
+      <v-input :formData="filterForm" :opt="phone"></v-input>&nbsp;&nbsp;&nbsp;
+      <v-input :formData="filterForm" :opt="content"></v-input>
       <br>
       <date-picker :formData="filterForm"  type="datetime" :opt="dataRange" dateFormat="yyyy-MM-dd HH:mm:ss"></date-picker>
       <br>
@@ -91,6 +95,21 @@
         dialogModifyVisible: false,
         isModifyLoading: false,
         user_id: {
+          name: '用户ID',
+          key: 'user_id',
+          placeHolder: '请输入用户ID'
+        },
+        content: {
+          name: '短信内容',
+          key: 'content',
+          placeHolder: '请输入短信内容'
+        },
+        phone: {
+          name: '手机号',
+          key: 'phone',
+          placeHolder: '请输入手机号'
+        },
+        task_id: {
           name: '任务ID',
           key: 'task_id',
           placeHolder: '请输入任务ID'
@@ -103,7 +122,8 @@
             {label: '全部', val: '100'},
             {label: '成功', val: '0'},
             {label: '黑名单', val: '1'},
-            {label: ' 错误', val: '2'}
+            {label: ' 其他错误', val: '2'},
+            {label: ' 最近已发送', val: '3'}
           ]
         },
         dataRange: {
@@ -114,6 +134,9 @@
         },
         filterForm: {
           task_id: '',
+          user_id: '',
+          phone: '',
+          content: '',
           result_type: '100',
           start_time: moment().subtract(7, 'days').hour(0).minute(0).second(0).format(dateFormat),
           end_time: moment().subtract(0, 'days').hour(23).minute(59).second(59).format(dateFormat)
