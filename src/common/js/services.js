@@ -25,6 +25,7 @@ let Services = {
   // 签名列表
   singList: Domain + 'user-manage/sign-list',
   signAdd: Domain + 'user-manage/sign-add',
+  signDel: Domain + 'user-manage/sign-delete',
   signModify: Domain + 'user-manage/sign-modify',
 
   // 角色管理

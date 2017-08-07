@@ -54,7 +54,7 @@
         <template scope="scope">
           <!--<el-button @click="onDetail" type="text" size="small">查看</el-button>-->
           <el-button @click.prevent="onEdit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-          <!--<el-button @click.prevent="onDelete" type="text" size="small">删除</el-button>-->
+          <el-button @click.prevent="onDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -227,15 +227,16 @@ export default {
         this.userForm.user_id = rowData.user_id
       })
     },
-    onDelete () {
-      this.$confirm('确认要删除此用户吗?', '提示', {
+    onDelete (idx, rowData) {
+      this.$confirm('确认要删除此签名吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.request(Services.userAdminList, {
+        this.requestPost(Services.signDel, {
+          id: rowData.id
         }, (remoteData) => {
-          this.getContactList()
+          this.getList()
           this.$message({
             message: '删除成功'
           })
