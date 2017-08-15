@@ -49,6 +49,10 @@ let Services = {
   blackListCheck: Domain + 'black-mobile-manage/check',
   blackListUpload: Domain + 'black-mobile-manage/add-file',
 
+  // 通道、客户列表
+  channelList: Domain + 'public/get-op',
+  clientList: Domain + 'public/get-sp',
+
   // 运营商管理
   operatorList: Domain + 'mobile-operator-manage/list',
   operatorAdd: Domain + 'mobile-operator-manage/add',

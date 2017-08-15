@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <div class="filter-box">
-      <v-input :formData="filterForm" :opt="channel"></v-input>
+      <v-select :formData="filterForm" ref="status" :opt="channel"></v-select>
       <br>
-      <v-input :formData="filterForm" :opt="client"></v-input>
+      <v-select :formData="filterForm" ref="status" :opt="client"></v-select>
       <br>
       <date-picker :formData="filterForm"  type="date" :opt="dataRange" dateFormat="yyyy-MM-dd"></date-picker>
       <div class="btn-right-wrap">
@@ -70,6 +70,7 @@
 
 <script>
   import vInput from './filters/vInput'
+  import vSelect from './filters/vSelect.vue'
   import datePicker from './filters/datePicker'
   import _base from '../mixin/base.js'
   import _pagination from '../mixin/pagination.js'
@@ -87,12 +88,14 @@
         channel: {
           name: '通道',
           key: 'op_id',
-          placeHolder: '请输入通道id'
+          placeHolder: '请输入通道id',
+          items: []
         },
         client: {
           name: '客户',
           key: 'sp_id',
-          placeHolder: '请输入客户账号'
+          placeHolder: '请输入客户账号',
+          items: []
         },
         dataRange: {
           name: '起止时间',
@@ -117,10 +120,38 @@
     },
     created () {
       this.getList()
+      this.getChannels()
+      this.getClients()
     },
     methods: {
       search () {
         this.getList()
+      },
+      getChannels () {
+        this.requestPost(Services.channelList, {}, (remoteData) => {
+          let items = []
+          let rData = remoteData.data || {}
+          for (let k in rData) {
+            items.push({
+              label: rData[k],
+              val: k
+            })
+          }
+          this.channel.items = items
+        })
+      },
+      getClients () {
+        this.requestPost(Services.clientList, {}, (remoteData) => {
+          let items = []
+          let rData = remoteData.data || {}
+          for (let k in rData) {
+            items.push({
+              label: rData[k],
+              val: k
+            })
+          }
+          this.client.items = items
+        })
       },
       getList (page) {
         let params = Object.assign({}, this.filterForm)
@@ -153,7 +184,7 @@
       }
     },
     components: {
-      vInput, datePicker
+      vInput, datePicker, vSelect
     }
   }
 </script>
