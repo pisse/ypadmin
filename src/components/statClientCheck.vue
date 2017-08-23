@@ -23,7 +23,7 @@
            type="index"
            width="50">
        </el-table-column>-->
-      <el-table-column
+      <!--<el-table-column
           fixed
           prop="date"
           width="120"
@@ -32,15 +32,15 @@
       <el-table-column
           prop="sp_id"
           label="客户">
-      </el-table-column>
+      </el-table-column>-->
 
 
 
-      <el-table-column v-for="(column, idx) in columns" :key="idx"
-                       :prop="column.key"
-                       :label="column.title"
-                       :width="column.width"
-      ></el-table-column>
+      <<el-table-column
+        v-for="(item, idx) in columns" :key="idx"
+        :prop="item"
+        :label="item">
+    </el-table-column>
 
       <!-- <el-table-column
            fixed="right"
@@ -54,7 +54,7 @@
        </el-table-column>-->
     </el-table>
 
-    <div class="mt15">
+    <!--<div class="mt15">
       <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -63,7 +63,7 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
-    </div>
+    </div>-->
 
   </div>
 </template>
@@ -102,8 +102,7 @@
           start_time: moment().subtract(7, 'days').format(dateFormat),
           end_time: moment().subtract(1, 'days').format(dateFormat)
         },
-        columns: [{key: 'A', title: '（成功+未知）'}, {key: 'B', title: '失败条数'},
-          {key: 'C', title: '成本'}, {key: 'D', title: '利润'}, {key: 'E', title: '利润率'}],
+        columns: [], // [{key: 'A', title: '（成功+未知）'}, {key: 'B', title: '失败条数'}, {key: 'C', title: '成本'}, {key: 'D', title: '利润'}, {key: 'E', title: '利润率'}],
         tableData: []
       }
     },
@@ -140,17 +139,25 @@
         params['end_time'] = moment(params['end_time']).format(dateFormat)
         this.requestPost(Services.clientCheck, params, (remoteData) => {
           // this.columns = remoteData.list_title
-          this.tableData = this.formatTableData(remoteData.data || [])
+          this.tableData = this.formatTableData(remoteData)
           this.pageSize = remoteData.page_size
           this.total = parseInt(remoteData.total)
         })
       },
       formatTableData (data) {
         let rData = []
-        data.forEach((item, idx) => {
-          item['data']['date'] = item['date_time']
-          item['data']['sp_id'] = item['sp_id']
-          rData.push(item['data'])
+        let columns = []
+        for (var k in data.abscissa) {
+          columns.push(k)
+        }
+        let rows = data.ordinate
+        let rowsData = data.ordinate_data
+        columns.unshift('客户对账')
+        this.columns = columns
+        rows.forEach((key, idx) => {
+          let row = rowsData[key]
+          row['客户对账'] = key
+          rData.push(row)
         })
         return rData
       },

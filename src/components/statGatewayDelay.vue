@@ -151,7 +151,9 @@
         })
         return rData */
         let rData = []
-        let columns = data.abscissa || []
+        let columns = (data.abscissa || []).map((item, idx) => {
+          return item + ''
+        })
         let rows = data.ordinate
         let rowsData = data.ordinate_data
         columns.unshift('延迟时间')
