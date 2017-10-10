@@ -137,6 +137,11 @@ export default {
       tableData: []
     }
   },
+  watch: {
+    currentPage () {
+      this.getList()
+    }
+  },
   created () {
     this.getList()
   },
@@ -145,7 +150,9 @@ export default {
       this.getList()
     },
     getList () {
-      this.requestPost(Services.blackList, this.filterForm, (remoteData) => {
+      let params = Object.assign({}, this.filterForm)
+      params['page'] = this.currentPage
+      this.requestPost(Services.blackList, params, (remoteData) => {
         this.tableData = remoteData && remoteData.data.list || []
         // this.pageSize = remoteData.page_size
         this.total = parseInt(remoteData.data.total)

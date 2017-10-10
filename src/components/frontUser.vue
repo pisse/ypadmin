@@ -37,10 +37,12 @@
       <el-table-column
               fixed="right"
               label="操作"
-              width="280">
+              width="300">
         <template scope="scope">
           <el-button @click.prevent="onresetPwd(3,scope.$index, scope.row)" type="text" size="small">修改登录密码</el-button>
           <el-button @click.prevent="onresetPwd(4,scope.$index, scope.row)" type="text" size="small">修改发送密码</el-button>
+          <el-button @click.prevent="onMassSet(scope.$index, scope.row)" type="text" size="small">群发显示设置</el-button>
+          <el-button @click.prevent="onStatisticSet(scope.$index, scope.row)" type="text" size="small">按发送状态统计账单</el-button>
           <el-button @click.prevent="onEdit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
           <el-button @click.prevent="onDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
         </template>
@@ -58,7 +60,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog :title="modifyType==1 ? '新建用户': modifyType==2 ? '修改用户' : modifyType==3 ? '修改登录密码': '修改发送密码'" v-model="dialogUserModifyVisible" size="small" custom-class="user-dialog" @close="reset('userModify')">
+    <el-dialog :title="modifyType==1 ? '新建用户': modifyType==2 ? '修改用户' : modifyType==3 ? '修改登录密码': modifyType==4 ? '修改发送密码': modifyType==5 ? '群发菜单显示设置' : '按发送状态统计账单'" v-model="dialogUserModifyVisible" size="small" custom-class="user-dialog" @close="reset('userModify')">
       <el-form :model="userForm" :rules="userRules" ref="userModify"  v-loading="isModifyLoading">
 
         <template v-if="modifyType==3">
@@ -82,6 +84,18 @@
           </el-form-item>
           <el-form-item label="确认发送密码" label-width="120px" prop="pwd2">
             <el-input type="password" size="small" v-model="userForm.pwd2" auto-complete="off"></el-input>
+          </el-form-item>
+        </template>
+
+        <template v-else-if="modifyType==5">
+          <el-form-item label="是否显示群发菜单" :label-width="label_width" prop="is_send_mass">
+            <el-switch on-text="" off-text="" v-model="userForm.is_send_mass"></el-switch>
+          </el-form-item>
+        </template>
+
+        <template v-else-if="modifyType==6">
+          <el-form-item label="是否按发送状态统计账单" :label-width="label_width" prop="show_msg_statist">
+            <el-switch on-text="" off-text="" v-model="userForm.show_msg_statist"></el-switch>
           </el-form-item>
         </template>
 
@@ -227,6 +241,8 @@ export default {
       label_width: '150px',
       userForm: {
         is_captcha: false,
+        is_send_mass: 0,
+        show_msg_statist: 0,
         user_id: '',
         parent_id: '',
         sp_id: '',
@@ -261,6 +277,7 @@ export default {
         ]
       },
       columns: [{key: 'id', title: '用户ID', isAdd: false}, {key: 'username', title: '用户名'}, {key: 'phone', title: '电话'},
+        {key: 'is_send_mass_text', title: '是否显示群发菜单'}, {key: 'show_msg_statist_text', title: '是否按发送状态统计账单'},
         {key: 'login_password', title: '登录密码'}, {key: 'send_password', title: '发送密码'}],
       tableData: []
     }
@@ -291,6 +308,10 @@ export default {
             this.AddUser(formName)
           } else if (this.modifyType == 2) {
             this.EditUser(formName)
+          } else if (this.modifyType == 5) {
+            this.ResetMass(formName)
+          } else if (this.modifyType == 6) {
+            this.setStatisticType(formName)
           } else {
             this.resetPwd(formName)
           }
@@ -300,7 +321,7 @@ export default {
       })
     },
     reset (formName) {
-      console.log('reset')
+      // console.log('reset')
       this.$refs[formName].resetFields()
     },
     AddUser (formName) {
@@ -365,6 +386,54 @@ export default {
       return ''
     },
     onDetail () {},
+    ResetMass (formName) {
+      let params = {
+        user_id: this.userForm['user_id'],
+        is_send_mass: !this.userForm['is_send_mass'] + 0
+      }
+      this.requestPost(Services.userSendMass, params, (remoteData) => {
+        this.dialogUserModifyVisible = false
+        this.$refs[formName].resetFields()
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '修改成功'
+        })
+      }, 'isModifyLoading')
+    },
+    setStatisticType (formName) {
+      let params = {
+        user_id: this.userForm['user_id'],
+        show_msg_statist: this.userForm['show_msg_statist'] + 0
+      }
+      this.requestPost(Services.userStatisticType, params, (remoteData) => {
+        this.dialogUserModifyVisible = false
+        this.$refs[formName].resetFields()
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '修改成功'
+        })
+      }, 'isModifyLoading')
+    },
+    onMassSet (idx, rowData) {
+      this.modifyType = 5
+      this.dialogUserModifyVisible = true
+      this.$nextTick(() => {
+        Object.assign(this.userForm, rowData)
+        this.userForm['user_id'] = rowData['id']
+        this.userForm['is_send_mass'] = rowData['is_send_mass'] == '0'
+      })
+    },
+    onStatisticSet (idx, rowData) {
+      this.modifyType = 6
+      this.dialogUserModifyVisible = true
+      this.$nextTick(() => {
+        Object.assign(this.userForm, rowData)
+        this.userForm['user_id'] = rowData['id']
+        this.userForm['show_msg_statist'] = rowData['show_msg_statist'] == '1'
+      })
+    },
     onEdit (idx, rowData) {
       this.modifyType = 2
       this.dialogUserModifyVisible = true

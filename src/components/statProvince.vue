@@ -133,7 +133,7 @@
           let rData = remoteData.data || {}
           for (let k in rData) {
             items.push({
-              label: rData[k],
+              label: k + '-' + rData[k],
               val: k
             })
           }
@@ -146,7 +146,7 @@
           let rData = remoteData.data || {}
           for (let k in rData) {
             items.push({
-              label: rData[k],
+              label: k + '-' + rData[k],
               val: k
             })
           }

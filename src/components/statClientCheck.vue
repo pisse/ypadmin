@@ -36,7 +36,7 @@
 
 
 
-      <<el-table-column
+      <el-table-column
         v-for="(item, idx) in columns" :key="idx"
         :prop="item"
         :label="item">
@@ -125,7 +125,7 @@
           let rData = remoteData.data || {}
           for (let k in rData) {
             items.push({
-              label: rData[k],
+              label: k + '-' + rData[k],
               val: k
             })
           }

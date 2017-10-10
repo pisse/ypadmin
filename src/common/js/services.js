@@ -21,6 +21,8 @@ let Services = {
   userFrontModify: Domain + 'user-manage/user-modify',
   userFrontPwd: Domain + 'user-manage/user-modify-password',
   userFrontSendPwd: Domain + 'user-manage/user-modify-send-password',
+  userSendMass: Domain + 'user-manage/user-send-mass',
+  userStatisticType: Domain + 'user-manage/user-show-msg-statist',
 
   // 签名列表
   singList: Domain + 'user-manage/sign-list',
