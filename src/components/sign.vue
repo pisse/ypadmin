@@ -40,6 +40,10 @@
               label="签名">
       </el-table-column>
       <el-table-column
+          prop="extno"
+          label="扩展码">
+      </el-table-column>
+      <el-table-column
               prop="phone"
               label="电话">
       </el-table-column>
@@ -77,6 +81,9 @@
         </el-form-item>
         <el-form-item label="签名" label-width="100px" prop="sign">
           <el-input size="small" v-model="userForm.sign" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="扩展码" label-width="100px" prop="extno">
+          <el-input size="small" v-model="userForm.extno" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -131,6 +138,7 @@ export default {
       },
       userForm: {
         user_id: '',
+        extno: '',
         sign: '',
         id: ''
       },
@@ -225,6 +233,7 @@ export default {
         this.userForm.sign = rowData.sign
         this.userForm.id = rowData.id
         this.userForm.user_id = rowData.user_id
+        this.userForm.extno = rowData.extno
       })
     },
     onDelete (idx, rowData) {
